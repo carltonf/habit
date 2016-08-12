@@ -3,9 +3,9 @@ var git_msg_generate = require('../src/git-msg-generator').git_msg_generate;
 var expect = require('chai').expect
 
 describe('git-msg-generator', () => {
+
   describe('_json_data_validator', () => {
     var jsdata;
-
     // NOTE helper for test
     function expectToThrowSyntaxError(jsdata, msg_pat){
       expect(_json_data_validator.bind(null, jsdata))
@@ -17,7 +17,8 @@ describe('git-msg-generator', () => {
         stage: 'draft',
         state: 'fledging',
         title_abbr: 'my awsome post',
-        state_percent: '70%'
+        state_percent: '70%',
+        description: 'add awesome ref',
       };
     });
 
@@ -76,28 +77,52 @@ describe('git-msg-generator', () => {
         expect(_json_data_validator(jsdata)).is.true;
       });
     });
+
+    it ('no validation for description', () => {
+      // No validation
+    });
   });
+
 
   describe('git_msg_generate', () => {
     var jsdata;
+    var expected_msg;
 
-    it ('works', () => {
+    beforeEach(() => {
       jsdata = {
         title_abbr: 'my awesome post',
         stage: 'post',
         state: 'polishing',
-        state_percent: '70%'
+        state_percent: '70%',
       };
 
       // NOTE use backtick here so we can easily write multi-line string
-      var expected_msg =
+      expected_msg =
 `habit(post): my awesome post
 
 * status: polishing 70%
 `;
+    });
+
+    it ('works with description', () => {
+      jsdata.description = 'awesome editing';
+      expected_msg += "* description: awesome editing\n";
+
+      expect(git_msg_generate(jsdata)).to.equal(expected_msg);
+    });
+
+    it ('works with empty description', () => {
+      jsdata.description = '';
+
+      expect(git_msg_generate(jsdata)).to.equal(expected_msg);
+    });
+
+    it ('works with non-existent empty', () => {
+      delete jsdata.description;
 
       expect(git_msg_generate(jsdata)).to.equal(expected_msg);
     });
 
   });
-})
+
+});

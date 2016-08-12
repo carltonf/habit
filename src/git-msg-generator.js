@@ -37,6 +37,8 @@ function _json_data_validator (jsdata) {
     throw new SyntaxError("post state percent is not valid: " + state_percent)
   }
 
+  // NOTE no validation for 'description' field
+
   return true;
 }
 
@@ -45,12 +47,18 @@ function git_msg_generate (jsdata) {
 
   // NOTE avoid 'undefined'
   var state_percent = jsdata.state_percent || '';
+  var description_line = '';
+
+  // NOTE pay attention to the # of newlines
+  if ( jsdata.description ) {
+    description_line = `* description: ${jsdata.description}\n`;
+  }
 
   var msg =
 `habit(${jsdata.stage}): ${jsdata.title_abbr}
 
 * status: ${jsdata.state} ${jsdata.state_percent}
-`;
+${description_line}`;
 
   return msg;
 }
