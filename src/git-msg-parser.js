@@ -1,9 +1,11 @@
 // Parse the git commit message of `jekyll habit`
 //
 // Input: string
-// Output: json data (for consumption of other js modules)
-
-// NOTE check 'generator' file for format definition
+// Output: json data (for consumption of other js modules), or null if the input
+// msg is invalid
+//
+// NOTE check 'validator' file for format definition
+var validator = require('./git-msg-validator');
 const HEADER_PAT = /^habit\((\w+)\): (\w(?:.*\w)?)$/;
 const STATE_PAT = /^\* status: (\w+)(?: ([0-9]{2}%))?$/;
 const DESCRIPT_PAT = /^\* description: (\w(?:.*\w)?)$/;
@@ -19,12 +21,14 @@ function git_msg_parse (msg) {
   var json = {}
   var match_data;
 
+  if ( !header ) { return null; }
   match_data = header.match(HEADER_PAT);
   if (match_data){
     json.stage = match_data[1];
     json.title_abbr = match_data[2];
   }
 
+  if ( !state ) { return null; }
   match_data = state.match(STATE_PAT);
   if (match_data) {
     json.state = match_data[1];
@@ -33,14 +37,25 @@ function git_msg_parse (msg) {
     }
   }
 
-  match_data = description.match(DESCRIPT_PAT);
-  if (match_data) {
-    json.description = match_data[1];
+  // NOTE description is optional
+  if ( description ) {
+    match_data = description.match(DESCRIPT_PAT);
+    if (match_data) {
+      json.description = match_data[1];
+    }
   }
 
+  try {
+    validator.validate(json)
+  }
+  catch(e) {
+    if (e instanceof SyntaxError){
+      return null;
+    }
 
-  // TODO invalid data are yet to be considered
-  // We should factor `validator` out
+    throw e;
+  }
+
   return json;
 }
 

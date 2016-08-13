@@ -12,60 +12,97 @@ describe('git-msg-parser', () => {
       expected_json = {};
     });
 
-    it('works for basic msg', () => {
-      msg =
+    describe('works on valid input', () => {
+      it('basic msg', () => {
+        msg =
 `habit(post): my awesome post
 
 * status: polishing
 `;
 
-      expected_json = {
-        title_abbr: 'my awesome post',
-        stage: 'post',
-        state: 'polishing',
-      };
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+        };
 
-      expect( parser.parse(msg) ).to.deep.equal( expected_json );
-    });
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
+      });
 
-    it ('works for basic msg with percent', () => {
-      msg =
+      it ('basic msg with percent', () => {
+        msg =
 `habit(post): my awesome post
 
 * status: polishing 70%
 `;
 
-      expected_json = {
-        title_abbr: 'my awesome post',
-        stage: 'post',
-        state: 'polishing',
-        state_percent: '70%',
-      };
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+          state_percent: '70%',
+        };
 
-      expect( parser.parse(msg) ).to.deep.equal( expected_json );
-    });
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
+      });
 
-    it ('works for full msg', () => {
-      msg =
+      it ('full msg', () => {
+        msg =
 `habit(post): my awesome post
 
 * status: polishing 70%
 * description: awesome editing
 `;
 
-      expected_json = {
-        title_abbr: 'my awesome post',
-        stage: 'post',
-        state: 'polishing',
-        state_percent: '70%',
-        description: 'awesome editing',
-      };
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+          state_percent: '70%',
+          description: 'awesome editing',
+        };
 
-      expect( parser.parse(msg) ).to.deep.equal( expected_json );
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
     });
+
+    });
+
+    describe('returns null on invalid msg', () => {
+      function expectParseToReturnNull (msg) {
+        expect( parser.parse(msg) ).to.equal(null);
+      }
+
+      before(() => {
+        expected_json = null;
+      });
+
+      it ('that is empty', () => {
+        msg = '';
+
+        expectParseToReturnNull(msg);
+      });
+
+      it ('that lacks some field', () => {
+        msg = `habit(post): my awesome post`;
+
+        expectParseToReturnNull(msg);
+      });
+
+      it ('that is syntax-wise correct but semantically wrong', () => {
+        msg =
+`habit(post): my awesome post
+
+* status: wrong-state 70%
+* description: awesome editing
+`;
+
+        expectParseToReturnNull(msg);
+      });
+    });
+
   });
 
-  // RegExp looks small, but require good testing.
+  // NOTE: RegExp looks small, but requires good testing.
   describe('HEADER_PAT',  () => {
     var header;
     beforeEach(() => {
