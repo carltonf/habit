@@ -9,8 +9,10 @@
     "test": "mocha --reporter nyan"
   },
   "dependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.0.2",
     "vorpal": "^1.11.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
   }
 }
