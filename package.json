@@ -6,6 +6,7 @@
   "author": "Carl Xiong <xiongc05@gmail.com>",
   "license": "ISC",
   "scripts": {
+    "start": "node ./index.js",
     "test": "mocha --reporter nyan"
   },
   "dependencies": {

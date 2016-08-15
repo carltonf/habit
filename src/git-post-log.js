@@ -22,8 +22,12 @@ function git_post_log(post_path, num) {
   return spawn_result.stdout.toString();
 }
 
-modules.exports = {
+// NOTE for convenience
+function git_post_status(post_path) {
+  return git_post_log(post_path, 1);
+}
+
+module.exports = {
   log: git_post_log,
-  // export status for convenience
-  status: git_post_log.bind(null, 1);
+  status: git_post_status,
 }
