@@ -12,12 +12,29 @@ describe('git-msg-parser', () => {
       expected_json = {};
     });
 
-    describe('works on valid input', () => {
+    describe('works on valid input like', () => {
       it('basic msg', () => {
         msg =
 `habit(post): my awesome post
 
 * state: polishing
+`;
+
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+        };
+
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
+      });
+
+      it('basic msg with extra whitespace', () => {
+        // NOTE 'state:' is followed by tab and whitespace
+        msg =
+`habit(post):          my awesome post     
+
+* state:	 polishing
 `;
 
         expected_json = {
@@ -63,7 +80,26 @@ describe('git-msg-parser', () => {
         };
 
         expect( parser.parse(msg) ).to.deep.equal( expected_json );
-    });
+      });
+
+      it ('full msg with punctuations in description', () => {
+        msg =
+`habit(post): my awesome post
+
+* state: polishing 70%
+* description: awesome editing!
+`;
+
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+          state_percent: '70%',
+          description: 'awesome editing!',
+        };
+
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
+      });
 
     });
 
