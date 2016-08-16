@@ -9,7 +9,7 @@ function git_msg_generate (jsdata) {
   validate(jsdata);
 
   // NOTE avoid 'undefined'
-  var state_percent = jsdata.state_percent || '';
+  var percent_line = jsdata.state_percent || '';
   var description_line = '';
 
   // NOTE pay attention to the # of newlines
@@ -20,7 +20,7 @@ function git_msg_generate (jsdata) {
   var msg =
 `habit(${jsdata.stage}): ${jsdata.title_abbr}
 
-* status: ${jsdata.state} ${jsdata.state_percent}
+* status: ${jsdata.state} ${percent_line}
 ${description_line}`;
 
   return msg;

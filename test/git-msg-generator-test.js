@@ -42,6 +42,16 @@ describe('git-msg-generator', () => {
       expect(generate(jsdata)).to.equal(expected_msg);
     });
 
+    it ('works with empty percent', () => {
+      expected_msg =
+`habit(post): my awesome post
+
+* status: polishing 
+`;
+      delete jsdata.state_percent;
+
+      expect(generate(jsdata)).to.equal(expected_msg);
+    });
   });
 
 });
