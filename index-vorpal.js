@@ -43,22 +43,42 @@ vorpal
   });
 
 vorpal
-  .command('edit [post_path]', 'Edit `post_path` or `cwp`')
+  .command('edit [post_path]', 'Edit(vi) `post_path` or `cwp`')
+  .option('-e, --emacs', 'Use emacs(ecn) to edit')
   .action(function(args, cb) {
     let post_path = args.post_path || cwp;
+    let editor = 'vi';
+    let spawn_options = { stdio: 'inherit' };
 
-    spawn('vi', [post_path], { stdio: 'inherit' });
+    if (args.options.emacs) {
+      editor = 'ecn';
+      // NOTE this is the `spawn` default
+      spawn_options = { stdio: 'pipe' };
+    }
+
+    spawn(editor, [post_path], spawn_options);
 
     cb();
   });
 
 vorpal
-  .command('diff', 'Sample diff to see whether color is displayed')
+  .command('git [gitargs...]', 'Arbitrary cmds to Git')
+// NOTE doesn't support '--no-cwp' style, the option name will be 'cwp' in this
+// case
+  .option('--nocwp', 'Do not pass `CWP` as last arg to Git')
   .action(function(args, cb) {
     let post_path = args.post_path || cwp;
+    let withCWP = ! args.options['nocwp'];
+    let gitArgs = args.gitargs;
 
-    spawn('git', ['diff'], { stdio: 'inherit' });
+    if (withCWP) {
+      gitArgs.push('--', post_path);
+    }
 
+    spawn('git', gitArgs, { stdio: 'inherit' });
+
+    // NOTE A trick to show delimiter after some stdio-inheritted cmd
+    this.log('');
     cb();
   })
 
@@ -70,6 +90,14 @@ vorpal
 
     cb();
   });
+
+// NOTE try to get C-P to work
+// vorpal.on('keypress', function(eobj) {
+//   // NOTE the key has no modifier info
+//   this.log("Get key: " + eobj.key);
+//   this.log('value: ' + eobj.value);
+//   this.log("full event keys: " + Object.keys( eobj ));
+// })
 
 
 //  NOTE: The first element will be process.execPath. The second element will be
