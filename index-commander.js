@@ -5,6 +5,7 @@ var program = require('commander');
 const post_logger = require('./src/git-post-log');
 const child_process = require('child_process');
 const git_msg_parser = require('./src/git-msg-parser');
+const git_msg_generator = require('./src/git-msg-generator');
 
 // FIX: dbg
 process.chdir('/home/vagrant/try/blog-habit-sample');
@@ -13,6 +14,11 @@ var cwp = 'my-blog.md';
 // dbg ENDs
 
 program.version('0.0.1')
+
+function _get_post_status_json (post_path) {
+  let status = post_logger.raw_status(post_path);
+  return git_msg_parser.parse(status);
+}
 
 program
   .command('status [post_path]')
@@ -42,9 +48,7 @@ program
       status = post_logger.status(post_path);
     }
     else {
-      status = post_logger.raw_status(post_path);
-      let statusJSON = git_msg_parser.parse(status);
-      // dbg
+      let statusJSON = _get_post_status_json(post_path);
       status = fields.reduce( (res, field) => {
         res[field] = statusJSON[field];
         return res;
@@ -68,18 +72,50 @@ program
     child_process.spawnSync(editor, [post_path], {stdio: 'inherit'});
   });
 
+// NOTE For now, the life cycle of the post is flexible and there is no hard
+// limit on the state transition
 program
   .command('commit [post_path]')
-  .description('commit post')
+  .description('commit post, all unset fields will be the same as last')
+  .option('-S, --stage <stage>', 'Set the stage of the post')
+// NOTE title_abbr can NOT be set
+// .option('-t, --title_abbr <title_abbr>', 'Set the abbreviated title')
+  .option('-s, --state <state>', 'Set the state')
+  .option('-p, --state_percent <state_percent>', 'Set the state percent')
+  .option('-d, --desc <desc>', 'Set the description')
   .action(function (post_path) {
-    // TODO maybe will refer to env EDITOR in the future
-    let editor = 'vi';
+    post_path = post_path || cwp;
 
-    // FIX this introduced an OS-specific feature
-    var tmpFolder = fs.mkdtempSync('/tmp/habit-');
+    let lastStatusJSON = _get_post_status_json(post_path);
+    // NOTE we want a copy object here, lucky that the status is recorded in JSON
+    let newStatusJSON = JSON.parse(JSON.stringify(lastStatusJSON));
 
-    var commitMsg = '';
+    let allOpts = this.opts();
+    for(let opt in allOpts) {
+      let optVal = allOpts[opt];
+      if (optVal) {
+        // TODO a workaround for 'description' problem
+        if ( opt === 'desc' ) { opt = 'description'; }
+        newStatusJSON[opt] = optVal;
+      }
+    }
 
-  })
+    // TODO this comparison is too simplistic
+    if ( JSON.stringify(newStatusJSON) === JSON.stringify(lastStatusJSON) ) {
+      console.log('* Error: new status can not be the same as the last.');
+      return -1;
+    }
+
+    // NOTE handle description specially. 'description' field is optional, but
+    // usually it makes little sense to be the same the last
+    if ( newStatusJSON.description === lastStatusJSON.description ){
+      delete newStatusJSON.description
+    }
+
+    console.log('Old Status: \n' + JSON.stringify(lastStatusJSON));
+    console.log('New Status: \n' + JSON.stringify(newStatusJSON));
+    console.log('New Commit Mes: \n' + git_msg_generator.generate(newStatusJSON));
+  });
+
 // NOTE parse and execute
 program.parse(process.argv);
