@@ -7,7 +7,7 @@
 // NOTE check 'validator' file for format definition
 var validator = require('./git-msg-validator');
 const HEADER_PAT = /^habit\((\w+)\): (\w(?:.*\w)?)$/;
-const STATE_PAT = /^\* status: (\w+)(?: ([0-9]{2}%))?$/;
+const STATE_PAT = /^\* state: (\w+)(?: ([0-9]{2}%))?$/;
 const DESCRIPT_PAT = /^\* description: (\w(?:.*\w)?)$/;
 
 function __split_msg (msg) {

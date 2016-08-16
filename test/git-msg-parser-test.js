@@ -17,7 +17,7 @@ describe('git-msg-parser', () => {
         msg =
 `habit(post): my awesome post
 
-* status: polishing
+* state: polishing
 `;
 
         expected_json = {
@@ -33,7 +33,7 @@ describe('git-msg-parser', () => {
         msg =
 `habit(post): my awesome post
 
-* status: polishing 70%
+* state: polishing 70%
 `;
 
         expected_json = {
@@ -50,7 +50,7 @@ describe('git-msg-parser', () => {
         msg =
 `habit(post): my awesome post
 
-* status: polishing 70%
+* state: polishing 70%
 * description: awesome editing
 `;
 
@@ -92,7 +92,7 @@ describe('git-msg-parser', () => {
         msg =
 `habit(post): my awesome post
 
-* status: wrong-state 70%
+* state: wrong-state 70%
 * description: awesome editing
 `;
 
