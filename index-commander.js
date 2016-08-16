@@ -6,6 +6,7 @@ const post_logger = require('./src/git-post-log');
 const child_process = require('child_process');
 const git_msg_parser = require('./src/git-msg-parser');
 const git_msg_generator = require('./src/git-msg-generator');
+const git_post_commit = require('./src/git-post-commit');
 
 // FIX: dbg
 process.chdir('/home/vagrant/try/blog-habit-sample');
@@ -83,8 +84,14 @@ program
   .option('-s, --state <state>', 'Set the state')
   .option('-p, --state_percent <state_percent>', 'Set the state percent')
   .option('-d, --desc <desc>', 'Set the description')
+// TODO currently adding non-field option will yield problems
   .action(function (post_path) {
     post_path = post_path || cwp;
+
+    if ( !git_post_commit.can_commit(post_path) ) {
+      console.warn('* ERROR: no editing for ' + post_path);
+      return -1;
+    }
 
     let lastStatusJSON = _get_post_status_json(post_path);
     // NOTE we want a copy object here, lucky that the status is recorded in JSON
@@ -112,9 +119,12 @@ program
       delete newStatusJSON.description
     }
 
-    console.log('Old Status: \n' + JSON.stringify(lastStatusJSON));
-    console.log('New Status: \n' + JSON.stringify(newStatusJSON));
-    console.log('New Commit Mes: \n' + git_msg_generator.generate(newStatusJSON));
+    // console.log('Old Status: \n' + JSON.stringify(lastStatusJSON));
+    // console.log('New Status: \n' + JSON.stringify(newStatusJSON));
+    // console.log('New Commit Msg: \n' + git_msg_generator.generate(newStatusJSON));
+
+    let commitMsg = git_msg_generator.generate(newStatusJSON);
+    git_post_commit.commit(post_path, commitMsg);
   });
 
 // NOTE parse and execute
