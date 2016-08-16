@@ -10,6 +10,7 @@
     "test": "mocha --reporter nyan"
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "vorpal": "^1.11.4"
   },
   "devDependencies": {
