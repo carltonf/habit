@@ -82,6 +82,25 @@ describe('git-msg-parser', () => {
         expect( parser.parse(msg) ).to.deep.equal( expected_json );
       });
 
+      it ('full msg with different paragrahs', () => {
+        msg =
+`habit(post): my awesome post
+* state: polishing 70%
+
+* description: awesome editing
+`;
+
+        expected_json = {
+          title_abbr: 'my awesome post',
+          stage: 'post',
+          state: 'polishing',
+          state_percent: '70%',
+          description: 'awesome editing',
+        };
+
+        expect( parser.parse(msg) ).to.deep.equal( expected_json );
+      });
+
       it ('full msg with punctuations in description', () => {
         msg =
 `habit(post): my awesome post

@@ -17,10 +17,12 @@ function git_msg_generate (jsdata) {
     description_line = `* description: ${jsdata.description}\n`;
   }
 
+  // TODO `habit`, `state` and the likes are keywords and should be encapsulated
+  // in a enum, so changes to it only need to be done in one place.
   var msg =
 `habit(${jsdata.stage}): ${jsdata.title_abbr}
 
-* status: ${jsdata.state} ${percent_line}
+* state: ${jsdata.state} ${percent_line}
 ${description_line}`;
 
   return msg;

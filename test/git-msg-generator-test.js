@@ -19,7 +19,7 @@ describe('git-msg-generator', () => {
       expected_msg =
 `habit(post): my awesome post
 
-* status: polishing 70%
+* state: polishing 70%
 `;
     });
 
@@ -46,7 +46,7 @@ describe('git-msg-generator', () => {
       expected_msg =
 `habit(post): my awesome post
 
-* status: polishing 
+* state: polishing 
 `;
       delete jsdata.state_percent;
 
