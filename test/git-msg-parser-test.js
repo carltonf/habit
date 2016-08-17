@@ -1,5 +1,6 @@
 var expect = require('chai').expect
 var parser = require('../src/git-msg-parser');
+var K = require('../src/keywords-enum');
 
 describe('git-msg-parser', () => {
 
@@ -15,9 +16,9 @@ describe('git-msg-parser', () => {
     describe('works on valid input like', () => {
       it('basic msg', () => {
         msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing
+* ${K.STATE}: polishing
 `;
 
         expected_json = {
@@ -32,9 +33,9 @@ describe('git-msg-parser', () => {
       it('basic msg with extra whitespace', () => {
         // NOTE 'state:' is followed by tab and whitespace
         msg =
-`habit(post):          my awesome post     
+`${K.HABIT}(post):          my awesome post     
 
-* state:	 polishing
+* ${K.STATE}:	 polishing
 `;
 
         expected_json = {
@@ -48,9 +49,9 @@ describe('git-msg-parser', () => {
 
       it ('basic msg with percent', () => {
         msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing 70%
+* ${K.STATE}: polishing 70%
 `;
 
         expected_json = {
@@ -65,10 +66,10 @@ describe('git-msg-parser', () => {
 
       it ('full msg', () => {
         msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing 70%
-* description: awesome editing
+* ${K.STATE}: polishing 70%
+* ${K.DESCRIPTION}: awesome editing
 `;
 
         expected_json = {
@@ -84,10 +85,10 @@ describe('git-msg-parser', () => {
 
       it ('full msg with different paragrahs', () => {
         msg =
-`habit(post): my awesome post
-* state: polishing 70%
+`${K.HABIT}(post): my awesome post
+* ${K.STATE}: polishing 70%
 
-* description: awesome editing
+* ${K.DESCRIPTION}: awesome editing
 `;
 
         expected_json = {
@@ -103,10 +104,10 @@ describe('git-msg-parser', () => {
 
       it ('full msg with punctuations in description', () => {
         msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing 70%
-* description: awesome editing!
+* ${K.STATE}: polishing 70%
+* ${K.DESCRIPTION}: awesome editing!
 `;
 
         expected_json = {
@@ -138,17 +139,17 @@ describe('git-msg-parser', () => {
       });
 
       it ('that lacks some field', () => {
-        msg = `habit(post): my awesome post`;
+        msg = `${K.HABIT}(post): my awesome post`;
 
         expectParseToReturnNull(msg);
       });
 
       it ('that is syntax-wise correct but semantically wrong', () => {
         msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: wrong-state 70%
-* description: awesome editing
+* ${K.STATE}: wrong-state 70%
+* ${K.DESCRIPTION}: awesome editing
 `;
 
         expectParseToReturnNull(msg);
@@ -165,7 +166,7 @@ describe('git-msg-parser', () => {
     });
 
     it ('match normal string', () => {
-      header = "habit(post): my awesome post";
+      header = `${K.HABIT}(post): my awesome post`;
 
       expect(parser.HEADER_PAT).is.an.instanceof(RegExp);
 
@@ -197,7 +198,7 @@ describe('git-msg-parser', () => {
 
     it ('match single-letter title', () => {
       // NOTE peculiar, but yet a supported edge case.
-      header = "habit(post): a";
+      header = `${K.HABIT}(post): a`;
 
       let match_data = header.match(parser.HEADER_PAT);
       expect(match_data).not.to.equal(null);
@@ -207,7 +208,7 @@ describe('git-msg-parser', () => {
     });
 
     it ("do NOT match empty-title header", () => {
-      header = "habit(post): ";
+      header = "${K.HABIT}(post): ";
 
       let match_data = header.match(parser.HEADER_PAT);
       expect(match_data).to.equal(null);

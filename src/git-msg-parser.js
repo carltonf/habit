@@ -6,6 +6,10 @@
 //
 // NOTE check 'validator' file for format definition
 var validator = require('./git-msg-validator');
+
+// NOTE regexp literal notation is used here for both convenience and
+// efficiency. Normally all references to keywords like `habit` should be using
+// constant enum from `keywords-enum`
 const HEADER_PAT = /^habit\((\w+)\):[ \t]+(\w(?:.*\w)?)\s*$/;
 const STATE_PAT = /^\* state:[ \t]+(\w+)(?: ([0-9]{2}%))?\s*$/;
 const DESCRIPT_PAT = /^\* description:[ \t]+(\w(?:.*\S)?)\s*$/;

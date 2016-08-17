@@ -1,5 +1,6 @@
 var generate = require('../src/git-msg-generator').generate;
 var expect = require('chai').expect
+var K = require('../src/keywords-enum');
 
 describe('git-msg-generator', () => {
 
@@ -17,15 +18,15 @@ describe('git-msg-generator', () => {
 
       // NOTE use backtick here so we can easily write multi-line string
       expected_msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing 70%
+* ${K.STATE}: polishing 70%
 `;
     });
 
     it ('works with description', () => {
       jsdata.description = 'awesome editing';
-      expected_msg += "* description: awesome editing\n";
+      expected_msg += `* ${K.DESCRIPTION}: awesome editing\n`;
 
       expect(generate(jsdata)).to.equal(expected_msg);
     });
@@ -44,9 +45,9 @@ describe('git-msg-generator', () => {
 
     it ('works with empty percent', () => {
       expected_msg =
-`habit(post): my awesome post
+`${K.HABIT}(post): my awesome post
 
-* state: polishing 
+* ${K.STATE}: polishing 
 `;
       delete jsdata.state_percent;
 

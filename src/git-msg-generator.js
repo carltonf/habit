@@ -4,6 +4,7 @@
 // Output: string
 //
 var validate = require('./git-msg-validator').validate;
+var K = require('../src/keywords-enum');
 
 function git_msg_generate (jsdata) {
   validate(jsdata);
@@ -14,15 +15,13 @@ function git_msg_generate (jsdata) {
 
   // NOTE pay attention to the # of newlines
   if ( jsdata.description ) {
-    description_line = `* description: ${jsdata.description}\n`;
+    description_line = `* ${K.DESCRIPTION}: ${jsdata.description}\n`;
   }
 
-  // TODO `habit`, `state` and the likes are keywords and should be encapsulated
-  // in a enum, so changes to it only need to be done in one place.
   var msg =
-`habit(${jsdata.stage}): ${jsdata.title_abbr}
+`${K.HABIT}(${jsdata.stage}): ${jsdata.title_abbr}
 
-* state: ${jsdata.state} ${percent_line}
+* ${K.STATE}: ${jsdata.state} ${percent_line}
 ${description_line}`;
 
   return msg;
