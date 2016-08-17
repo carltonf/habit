@@ -1,12 +1,14 @@
+#!/usr/bin/env node
+
+const child_process = require('child_process');
 const fs = require('fs');
 
 var program = require('commander');
 
-const post_logger = require('./src/git-post-log');
-const child_process = require('child_process');
-const git_msg_parser = require('./src/git-msg-parser');
-const git_msg_generator = require('./src/git-msg-generator');
-const git_post_commit = require('./src/git-post-commit');
+const post_logger = require('../src/git-post-log');
+const git_msg_parser = require('../src/git-msg-parser');
+const git_msg_generator = require('../src/git-msg-generator');
+const git_post_commit = require('../src/git-post-commit');
 
 // FIX: dbg
 process.chdir('/home/vagrant/try/blog-habit-sample');

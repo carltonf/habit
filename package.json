@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Carl Xiong <xiongc05@gmail.com>",
   "license": "ISC",
+  "bin": {
+    "habit": "bin/habit"
+  },
   "scripts": {
     "start": "node ./index.js",
     "test": "mocha --reporter nyan"
