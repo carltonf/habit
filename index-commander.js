@@ -50,6 +50,10 @@ program
     }
     else {
       let statusJSON = _get_post_status_json(post_path);
+      if (statusJSON === null) {
+        console.error('* Error: git message is invalid! (data corruption?)');
+        return -1;
+      }
       status = fields.reduce( (res, field) => {
         res[field] = statusJSON[field];
         return res;
@@ -94,6 +98,11 @@ program
     }
 
     let lastStatusJSON = _get_post_status_json(post_path);
+    if (statusJSON === null) {
+      console.error('* Error: git message is invalid! (data corruption?)');
+      return -1;
+    }
+
     // NOTE we want a copy object here, lucky that the status is recorded in JSON
     let newStatusJSON = JSON.parse(JSON.stringify(lastStatusJSON));
 
