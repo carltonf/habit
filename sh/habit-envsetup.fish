@@ -29,6 +29,16 @@ function habit-cwp -d 'get/set cwp'
     echo "* Error: no post with name '$post'"
     return 1
   end
+
+  # update the last_modified_at field
+  habit-set-modified
+end
+
+# TODO better to be in 'habit commit' as for now this only works for CWP
+# TODO this will not insert a new field though
+function habit-set-modified -d 'set "last_modified_at" field for cwp'
+  set today (date +%Y-%m-%d)
+  sed -i "s/last_modified_at:.*/last_modified_at: $today/" $habit_working_post
 end
 
 function __fish_habit_find_post -d 'search post path with post name'
