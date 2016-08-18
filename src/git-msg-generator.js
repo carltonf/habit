@@ -1,4 +1,4 @@
-// Generate git commit message for jekyll habit
+// Generate git commit message for habit
 //
 // Input: Json data
 // Output: string

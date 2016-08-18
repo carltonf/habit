@@ -1,7 +1,7 @@
 {
-  "name": "jekyll-habit",
-  "version": "0.0.1",
-  "description": "An CLI tool to enforce a writing style.",
+  "name": "habit",
+  "version": "0.1.0",
+  "description": "An CLI tool to enforce a writing habit.",
   "main": "index.js",
   "author": "Carl Xiong <xiongc05@gmail.com>",
   "license": "ISC",
@@ -13,8 +13,7 @@
     "test": "mocha --reporter nyan"
   },
   "dependencies": {
-    "commander": "^2.9.0",
-    "vorpal": "^1.11.4"
+    "commander": "^2.9.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

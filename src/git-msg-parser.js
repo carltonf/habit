@@ -1,4 +1,4 @@
-// Parse the git commit message of `jekyll habit`
+// Parse the git commit message of `habit`
 //
 // Input: string
 // Output: json data (for consumption of other js modules), or null if the input
