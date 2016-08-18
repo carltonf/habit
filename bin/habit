@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// -*- mode: js -*-
 
 const child_process = require('child_process');
 const fs = require('fs');
@@ -10,13 +11,17 @@ const git_msg_parser = require('../src/git-msg-parser');
 const git_msg_generator = require('../src/git-msg-generator');
 const git_post_commit = require('../src/git-post-commit');
 
-// FIX: dbg
-process.chdir('/home/vagrant/try/blog-habit-sample');
 // TODO: cwp should be from env
-var cwp = 'my-blog.md';
-// dbg ENDs
+var CWP_ENV = 'habit_working_post';
+var cwp = process.env[CWP_ENV];
+function _bail_out_if_post_unset(post_path) {
+  if ( !post_path ) {
+    console.error('* Error: CWP is not set');
+    process.exit(-1);
+  }
+}
 
-program.version('0.0.1')
+program.version('0.1.0')
 
 function _get_post_status_json (post_path) {
   let status = post_logger.raw_status(post_path);
@@ -34,6 +39,7 @@ program
   .option('-d, --desc', 'Only print the description')
   .action(function (post_path, options) {
     post_path = post_path || cwp;
+    _bail_out_if_post_unset(post_path);
     let status = '';
     let allOpts = this.opts();
     let fields = [];
@@ -75,6 +81,7 @@ program
       editor = 'ecn';
     }
     post_path = post_path || cwp;
+    _bail_out_if_post_unset(post_path);
 
     child_process.spawnSync(editor, [post_path], {stdio: 'inherit'});
   });
@@ -93,6 +100,7 @@ program
 // TODO currently adding non-field option will yield problems
   .action(function (post_path) {
     post_path = post_path || cwp;
+    _bail_out_if_post_unset(post_path);
 
     if ( !git_post_commit.can_commit(post_path) ) {
       console.warn('* ERROR: no editing for ' + post_path);
@@ -137,6 +145,26 @@ program
     let commitMsg = git_msg_generator.generate(newStatusJSON);
     git_post_commit.commit(post_path, commitMsg);
   });
+
+program
+  .command('help')
+  .description('Print help/usage info.')
+  .action(function() {
+    program.help();
+  });
+
+program
+  .command('*', 'Default to status', { noHelp: true })
+  .action(function() {
+    console.error('* Error: Unkown commands/options: ' + process.argv.slice(2));
+    this.outputHelp();
+  })
+
+// NOTE default to status
+if (!process.argv.slice(2).length) {
+  process.argv.push('status');
+  // program.parse(process.argv);
+}
 
 // NOTE parse and execute
 program.parse(process.argv);
