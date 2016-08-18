@@ -154,6 +154,33 @@ program
     git_post_commit.commit(post_path, commitMsg);
   });
 
+// TODO the following can be problematic as it doesn't check whether the tip of
+// the branch is a commit of this post and there is also no check for whether
+// the commit is pushed to remote already.
+program
+  .command('camend [post_path]')
+  .description('commit --amend, reuse last commit message')
+  .action(function (post_path) {
+    post_path = post_path || cwp;
+    _bail_out_if_post_unset(post_path);
+
+    if ( !git_post_commit.can_commit(post_path) ) {
+      console.warn('* ERROR: no editing for ' + post_path);
+      return -1;
+    }
+
+    let lastStatusJSON = _get_post_status_json(post_path);
+    if (lastStatusJSON === null) {
+      console.error('* Error: camend requires last commit available.');
+      return -1;
+    }
+
+    let commitMsg = git_msg_generator.generate(lastStatusJSON);
+    // NOTE true to not prompt editor
+    git_post_commit.commit(post_path, commitMsg, true);
+    console.log('* INFO: commit --amend with newest changes.');
+  });
+
 program
   .command('help')
   .description('Print help/usage info.')

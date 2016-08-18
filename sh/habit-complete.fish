@@ -1,6 +1,6 @@
 function __fish_habit_no_subcommand -d 'Test if habit has sub command'
   for i in (commandline -opc)
-    if contains -- $i 'edit' 'status' 'commit'
+    if contains -- $i 'edit' 'status' 'commit' 'camend'
       return 1
     end
   end
@@ -37,7 +37,7 @@ end
 # NOTE: much learned from https://github.com/docker/docker/blob/master/contrib/completion/fish/docker.fish
 complete -e -c habit
 # extras (maybe better to fall back to autocomplete wrapper)
-for cmd in edit status commit
+for cmd in edit status commit camend
   complete -c habit -f -n '__fish_habit_no_subcommand' -a $cmd -d 'Habit Cmd'
 end
 
@@ -55,6 +55,6 @@ complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s p -l state_pe
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s t -l title_abbr -a 'titleabbr'
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s d -l desc -a 'description'
 
-# habit-cwp
+## habit-cwp
 complete -e -c habit-cwp
 complete -c habit-cwp -f -a '(__fish_habit_list_drafts_posts all)'
