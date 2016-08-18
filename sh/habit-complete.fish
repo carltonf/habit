@@ -52,6 +52,7 @@ complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -a '(__fish_habi
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s S -l stage -a 'draft post'
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s s -l state -a 'scaffolding fledging editing polishing reviewing'
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s p -l state_percent -a '50%'
+complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s t -l title_abbr -a 'titleabbr'
 complete -c habit -A -f -n '__fish_seen_subcommand_from commit' -s d -l desc -a 'description'
 
 # habit-cwp

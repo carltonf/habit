@@ -21,7 +21,9 @@ function _bail_out_if_post_unset(post_path) {
   }
 }
 
-program.version('0.1.0')
+// NOTE read version info from package.json (a possible security issue, see below)
+// Ref: http://stackoverflow.com/a/10855054/2526378
+program.version(require('../package.json').version)
 
 function _get_post_status_json (post_path) {
   let status = post_logger.raw_status(post_path);
@@ -92,8 +94,7 @@ program
   .command('commit [post_path]')
   .description('commit post, all unset fields will be the same as last')
   .option('-S, --stage <stage>', 'Set the stage of the post')
-// NOTE title_abbr can NOT be set
-// .option('-t, --title_abbr <title_abbr>', 'Set the abbreviated title')
+  .option('-t, --title_abbr <title_abbr>', 'Set the abbreviated title')
   .option('-s, --state <state>', 'Set the state')
   .option('-p, --state_percent <state_percent>', 'Set the state percent')
   .option('-d, --desc <desc>', 'Set the description')
@@ -108,9 +109,11 @@ program
     }
 
     let lastStatusJSON = _get_post_status_json(post_path);
-    if (statusJSON === null) {
-      console.error('* Error: git message is invalid! (data corruption?)');
-      return -1;
+    // NOTE be more forgiving, needed as old post and new post do not have valid
+    // old git message.
+    if (lastStatusJSON === null) {
+      console.warn('* WARNING: no previous status can be found (init?)');
+      lastStatusJSON = {};
     }
 
     // NOTE we want a copy object here, lucky that the status is recorded in JSON
@@ -122,6 +125,11 @@ program
       if (optVal) {
         // TODO a workaround for 'description' problem
         if ( opt === 'desc' ) { opt = 'description'; }
+        // NOTE title_abbr can NOT be set
+        if ( opt === 'title_abbr' && newStatusJSON.title_abbr ) {
+          console.error('* Title abbreviation can not be changed. New setting is ignored.');
+          continue;
+        }
         newStatusJSON[opt] = optVal;
       }
     }
