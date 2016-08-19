@@ -10,10 +10,9 @@ const post_logger = require('../src/git-post-log');
 const git_msg_parser = require('../src/git-msg-parser');
 const git_msg_generator = require('../src/git-msg-generator');
 const git_post_commit = require('../src/git-post-commit');
+const cmdHelpers = require('../src/subcmd/_helpers');
 
-// TODO: cwp should be from env
-var CWP_ENV = 'habit_working_post';
-var cwp = process.env[CWP_ENV];
+var cwp = cmdHelpers.getCWP()
 function _bail_out_if_post_unset(post_path) {
   if ( !post_path ) {
     console.error('* Error: CWP is not set');
@@ -30,48 +29,7 @@ function _get_post_status_json (post_path) {
   return git_msg_parser.parse(status);
 }
 
-program
-  .command('status [post_path]')
-  .description('Show status (git msg by default) for `post_path` or `cwp`')
-  .option('-S, --stage', 'Only print the stage of the post')
-  .option('-t, --title_abbr', 'Only print the abbreviated title')
-  .option('-s, --state', 'Only print the state')
-// TODO believe to be a bug, if we use 'description' here, it shows that it's a
-// [Function] and setting it won't work
-  .option('-d, --desc', 'Only print the description')
-  .action(function (post_path, options) {
-    post_path = post_path || cwp;
-    _bail_out_if_post_unset(post_path);
-    let status = '';
-    let allOpts = this.opts();
-    let fields = [];
-
-    for (let opt in allOpts) {
-      let optVal = allOpts[opt];
-      if (optVal){
-        // TODO a workaround for 'description' problem
-        if ( opt === 'desc' ) { opt = 'description'; }
-        fields.push(opt);
-      }
-    }
-
-    if ( fields.length === 0 ){
-      status = post_logger.status(post_path);
-    }
-    else {
-      let statusJSON = _get_post_status_json(post_path);
-      if (statusJSON === null) {
-        console.error('* Error: git message is invalid! (data corruption?)');
-        return -1;
-      }
-      status = fields.reduce( (res, field) => {
-        res[field] = statusJSON[field];
-        return res;
-      }, {});
-    }
-
-    console.log(status);
-  });
+require('../src/subcmd/status').registerTo(program);
 
 program
   .command('edit [post_path]')

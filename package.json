@@ -1,6 +1,6 @@
 {
   "name": "habit",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An CLI tool to enforce a writing habit.",
   "main": "index.js",
   "author": "Carl Xiong <xiongc05@gmail.com>",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "mocha --reporter nyan"
+    "test": "mocha --reporter nyan --recursive"
   },
   "dependencies": {
     "commander": "^2.9.0"
