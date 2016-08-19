@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 const CWP_ENV = 'habit_working_post';
 
 function getCWP () {
@@ -9,6 +11,11 @@ function getCWP () {
 //   return git_msg_parser.parse(status);
 // }
 
+function assertPostPath (postPath) {
+  // TODO very simplistic test, in the future add some real file testing
+  // (existence, permission and etc.)
+  assert(postPath, '* Error: post path and CWP is not set');
+};
 
 // NOTE Parse post status field from commander options. If `fieldKeys` is not
 // supplied, all keys in `opts` are considered field key.
@@ -35,5 +42,6 @@ function parseFieldsFromOpts(opts, fieldKeys) {
 module.exports = {
   CWP_ENV: CWP_ENV,
   getCWP: getCWP,
-  parseFieldsFromOpts: parseFieldsFromOpts
+  parseFieldsFromOpts: parseFieldsFromOpts,
+  assertPostPath: assertPostPath,
 }

@@ -34,7 +34,7 @@ describe('helpers', () => {
     });
   });
 
-  describe('getCWP', () => {
+  describe('.getCWP', () => {
     const CWP_ENV = helpers.CWP_ENV;
     var expected = 'my-cwp';
     var cwp = '';
@@ -51,6 +51,13 @@ describe('helpers', () => {
       cwp = helpers.getCWP();
 
       expect(cwp).to.equal(null);
+    });
+  });
+
+  describe('.assertPostPath', () => {
+    it('works', () => {
+      expect( () => helpers.assertPostPath(null) )
+        .to.throw(Error, /not set/);
     });
   });
 });
