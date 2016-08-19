@@ -30,21 +30,8 @@ function _get_post_status_json (post_path) {
 }
 
 require('../src/subcmd/status').registerTo(program);
+require('../src/subcmd/edit').registerTo(program);
 
-program
-  .command('edit [post_path]')
-  .option('-e --emacsclient', 'edit with Emacs(ecn)')
-  .description('edit post with vi')
-  .action(function (post_path, options) {
-    let editor = 'vi';
-    if (options.emacsclient) {
-      editor = 'ecn';
-    }
-    post_path = post_path || cwp;
-    _bail_out_if_post_unset(post_path);
-
-    child_process.spawnSync(editor, [post_path], {stdio: 'inherit'});
-  });
 
 // NOTE For now, the life cycle of the post is flexible and there is no hard
 // limit on the state transition

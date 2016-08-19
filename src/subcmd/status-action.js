@@ -6,7 +6,7 @@ const FieldKeys = ['stage', 'title_abbr', 'state', 'desc'];
 function StatusAction(postPath) {
   this.postPath = postPath;
 
-  assert(postPath, '* Error: CWP is not set');
+  helpers.assertPostPath(postPath);
 }
 
 StatusAction.prototype.getStatus = function getStatus (opts) {
@@ -33,7 +33,7 @@ StatusAction.prototype.getStatus = function getStatus (opts) {
   }
 
   return status;
-}
+};
 
 ////////////////
 // NOTE Wrap external dependencies in small simple methods that can be easily
