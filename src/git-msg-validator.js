@@ -15,7 +15,7 @@ function git_msg_validate (jsdata) {
 
   var allowed_states = STATES[jsdata.stage]
   if ( !(allowed_states.includes(jsdata.state)) ) {
-    throw new SyntaxError("post in not in any valid state: " + jsdata.state);
+    throw new SyntaxError("post is not in any valid state: " + jsdata.state);
   }
 
   // NOTE Actually `undefined` and `''` are both false value, but let's be
