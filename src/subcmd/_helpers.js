@@ -17,29 +17,37 @@ function assertPostPath (postPath) {
   assert(postPath, '* Error: post path and CWP is not set');
 };
 
-// NOTE Parse post status field from commander options. If `fieldKeys` is not
+// NOTE Parse post status fields from commander options. If `fieldKeys` is not
 // supplied, all keys in `opts` are considered field key.
+//
+// Return: an object containing key-value pair from `opts` with key in
+// `fieldKeys` and value not undefined.
 function parseFieldsFromOpts(opts, fieldKeys) {
-  let fields = [];
+  let fields = {};
   fieldKeys = fieldKeys || Object.keys(opts);
   for (let opt in opts) {
     if ( fieldKeys.indexOf(opt) === -1 ) {
       continue;
     }
     let optVal = opts[opt];
-    if (optVal){
+    if (typeof optVal !== 'undefined'){
       // TODO a workaround for 'description' problem
       if ( opt === 'desc' ) {
         opt = 'description';
       }
-      fields.push(opt);
+
+      fields[opt] = optVal;
     }
   }
 
   return fields;
 }
 
+
+const FIELD_KEYS = ['stage', 'title_abbr', 'state', 'desc'];
+
 module.exports = {
+  FIELD_KEYS: FIELD_KEYS,
   CWP_ENV: CWP_ENV,
   getCWP: getCWP,
   parseFieldsFromOpts: parseFieldsFromOpts,

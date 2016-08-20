@@ -5,7 +5,7 @@ describe('helpers', () => {
   describe('.parseFieldsFromOpts', () => {
     var opts = {};
     var fieldKeys = [];
-    var expected = [];
+    var expected = {};
     var res = [];
 
     beforeEach(() => {
@@ -14,7 +14,7 @@ describe('helpers', () => {
       };
       fieldKeys = ['b', 'c', 'x'];
 
-      expected = ['b', 'c'];
+      expected = { 'b': 2, 'c': 3 };
     });
 
     it('works without desc', () => {
@@ -26,7 +26,17 @@ describe('helpers', () => {
     it('works with desc translated to description', () => {
       opts.desc = true;
       fieldKeys.push('desc');
-      expected.push('description');
+      expected[ 'description' ] = true;
+
+      res = helpers.parseFieldsFromOpts(opts, fieldKeys);
+
+      expect(res).to.deep.equal(expected);
+    });
+
+    it('works with null', () => {
+      opts.weird = null;
+      fieldKeys.push('weird');
+      expected['weird'] = null;
 
       res = helpers.parseFieldsFromOpts(opts, fieldKeys);
 

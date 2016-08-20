@@ -38,7 +38,7 @@ describe('StatusAction', () => {
     });
 
     it('works with options', () => {
-      opts = { stage: true, state: true };
+      opts = { stage: true, state: true, title_abbr: undefined, };
       expected = JSON.stringify({ stage: 'post', state: 'reviewing', });
 
       res = action.getStatus(opts);

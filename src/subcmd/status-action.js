@@ -1,8 +1,6 @@
 const assert = require('assert');
 const helpers = require('./_helpers');
 
-const FieldKeys = ['stage', 'title_abbr', 'state', 'desc'];
-
 function StatusAction(postPath) {
   this.postPath = postPath;
 
@@ -12,9 +10,9 @@ function StatusAction(postPath) {
 StatusAction.prototype.getStatus = function getStatus (opts) {
   let status = null;
   opts = opts || {};
-  let fields = helpers.parseFieldsFromOpts( opts, FieldKeys );
+  let fields = helpers.parseFieldsFromOpts( opts, helpers.FIELD_KEYS );
 
-  if ( fields.length === 0 ){
+  if ( Object.keys(fields).length === 0 ){
     status = this.__getStatusStr();
   }
   else {
@@ -25,7 +23,7 @@ StatusAction.prototype.getStatus = function getStatus (opts) {
     status = {};
     // NOTE do NOT confuse `in` with `of`. Maybe the use of these two should be
     // discouraged.
-    for (let field of fields ) {
+    for (let field in fields ) {
       status[field] = statusJSON[field];
     }
 
@@ -47,7 +45,7 @@ StatusAction.prototype.__getStatusStr = function __getStatusStr () {
 }
 
 StatusAction.prototype.__getStatusJSON = function __getStatusJSON () {
-  let status = post_logger.raw_status(post_path);
+  let status = post_logger.raw_status(this.postPath);
   return git_msg_parser.parse(status);
 }
 
