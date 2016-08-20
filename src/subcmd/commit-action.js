@@ -9,7 +9,6 @@ function CommitAction(postPath) {
 
   this.postPath = postPath;
   helpers.assertPostPath(postPath);
-  this.assertCanCommit();
 
   this.statusJSON = this.getCurrentStatusJSON();
 }
@@ -65,8 +64,12 @@ CommitAction.prototype.commit = function commit(json) {
   this.__commit(json);
 };
 
-CommitAction.prototype.assertCanCommit = function assertCanCommit () {
-  assert(this.__canCommit(), `No changes yet for ${this.postPath}`);
+// NOTE the init/first status for a draft. `title_abbr` has to be manually set
+// though.
+const INIT_DRAFT_JSON = {
+  stage: 'draft',
+  state: 'scaffolding',
+  description: 'init',
 };
 
 CommitAction.prototype.getCurrentStatusJSON = function getCurrentStatusJSON () {
@@ -74,8 +77,8 @@ CommitAction.prototype.getCurrentStatusJSON = function getCurrentStatusJSON () {
   // NOTE be more forgiving, needed as old post and new post do not have
   // valid old git message.
   if (json === null) {
-    this._warnings.push('no previous status can be found.');
-    json = {};
+    this._warnings.push('No previous status can be found. Assumed default.');
+    json = INIT_DRAFT_JSON;
   }
   return json;
 };
@@ -85,10 +88,6 @@ const post_logger = require('../git-post-log');
 const git_msg_parser = require('../git-msg-parser');
 const git_msg_generator = require('../git-msg-generator');
 const git_post_commit = require('../git-post-commit');
-
-CommitAction.prototype.__canCommit = function __canCommit() {
-  return git_post_commit.can_commit(this.postPath);
-};
 
 // TODO same as what in `status-action`
 CommitAction.prototype.__getStatusJSON = function __getStatusJSON () {

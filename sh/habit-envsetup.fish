@@ -30,8 +30,10 @@ function habit-cwp -d 'get/set cwp'
     return 1
   end
 
-  # update the last_modified_at field
+  # NOTE update the last_modified_at field
   habit-set-modified
+  # NOTE make sure CWP is known to Git
+  git add $habit_working_post
 end
 
 # TODO better to be in 'habit commit' as for now this only works for CWP
