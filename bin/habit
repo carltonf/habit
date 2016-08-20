@@ -1,64 +1,17 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 
-const child_process = require('child_process');
-const fs = require('fs');
-
 var program = require('commander');
 
-const post_logger = require('../src/git-post-log');
-const git_msg_parser = require('../src/git-msg-parser');
-const git_msg_generator = require('../src/git-msg-generator');
-const git_post_commit = require('../src/git-post-commit');
-const cmdHelpers = require('../src/subcmd/_helpers');
-
-var cwp = cmdHelpers.getCWP()
-function _bail_out_if_post_unset(post_path) {
-  if ( !post_path ) {
-    console.error('* Error: CWP is not set');
-    process.exit(-1);
-  }
-}
-
-// NOTE read version info from package.json (a possible security issue, see below)
+// NOTE read version info from package.json (a possible security issue, see
+// below)
 // Ref: http://stackoverflow.com/a/10855054/2526378
 program.version(require('../package.json').version)
-
-function _get_post_status_json (post_path) {
-  let status = post_logger.raw_status(post_path);
-  return git_msg_parser.parse(status);
-}
 
 require('../src/subcmd/status').registerTo(program);
 require('../src/subcmd/edit').registerTo(program);
 require('../src/subcmd/commit').registerTo(program);
-
-// TODO the following can be problematic as it doesn't check whether the tip of
-// the branch is a commit of this post and there is also no check for whether
-// the commit is pushed to remote already.
-program
-  .command('camend [post_path]')
-  .description('commit --amend, reuse last commit message')
-  .action(function (post_path) {
-    post_path = post_path || cwp;
-    _bail_out_if_post_unset(post_path);
-
-    if ( !git_post_commit.can_commit(post_path) ) {
-      console.warn('* ERROR: no editing for ' + post_path);
-      return -1;
-    }
-
-    let lastStatusJSON = _get_post_status_json(post_path);
-    if (lastStatusJSON === null) {
-      console.error('* Error: camend requires last commit available.');
-      return -1;
-    }
-
-    let commitMsg = git_msg_generator.generate(lastStatusJSON);
-    // NOTE true to not prompt editor
-    git_post_commit.commit(post_path, commitMsg, true);
-    console.log('* INFO: commit --amend with newest changes.');
-  });
+require('../src/subcmd/camend').registerTo(program);
 
 program
   .command('help')

@@ -5,6 +5,14 @@
 //
 const spawn_sync = require('child_process').spawnSync;
 
+// NOTE commit --amend --no-edit
+function git_post_camend (post_path) {
+  let git_args = ['commit', '--amend', '--no-edit', '--', post_path];
+  let spawn_opts = { stdio: 'pipe' };
+
+  spawn_sync('git', git_args, spawn_opts);
+}
+
 // NOTE by default, this function spawns up git and take user to the editing
 // window, pre-populated with `msg`. Set `noedit` to true to inhibit this
 // behavior.
@@ -30,6 +38,9 @@ function git_post_commit(post_path, msg, noedit) {
 }
 
 // NOTE Test whether the `post_path` has any changes that can commit
+//
+// *Deprecated*: there seems to have no need to know whether a commit is
+// *possible in advance.
 function git_post_can_commit (post_path) {
   var diffStatus = spawn_sync('git', ['diff', '--name-only', '--', post_path])
   var diffOutput = diffStatus.stdout.toString();
@@ -40,4 +51,5 @@ function git_post_can_commit (post_path) {
 module.exports = {
   commit: git_post_commit,
   can_commit: git_post_can_commit,
+  amend: git_post_camend,
 }
