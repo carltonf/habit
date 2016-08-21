@@ -47,7 +47,7 @@ function habit-set-modified -d 'set "last_modified_at" field for cwp'
   # There is an issue with jekyll regenerating drafts without date field:
   # new changes always get skipped with "future date" warning.
   #
-  grep '^date:' $habit_working_post
+  grep '^date:' $habit_working_post 2>&1 1>/dev/null
   if [ $status -ne 0 ]
     sed -i "/^title:/a date: $today" $habit_working_post
   end

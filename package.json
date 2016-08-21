@@ -1,6 +1,6 @@
 {
   "name": "habit",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "An CLI tool to enforce a writing habit.",
   "main": "index.js",
   "author": "Carl Xiong <xiongc05@gmail.com>",
