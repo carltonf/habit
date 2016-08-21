@@ -36,6 +36,11 @@ function habit-cwp -d 'get/set cwp'
   git add $habit_working_post
 end
 
+# TODO merge into habit nodejs
+function habit-diff -d 'Show all changes not commited yet'
+  git diff HEAD -- $habit_working_post
+end
+
 # TODO better to be in 'habit commit' as for now this only works for CWP
 # TODO use the following to get the front matter line range to be more safer&accurate.
 # : grep -m 2 -n '^---$' _drafts/boxize-my-development-setup.md  | cut -d':' -f1
