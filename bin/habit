@@ -9,6 +9,8 @@ var program = require('commander');
 program.version(require('../package.json').version)
 
 require('../src/subcmd/status').registerTo(program);
+require('../src/subcmd/log').registerTo(program);
+
 require('../src/subcmd/edit').registerTo(program);
 require('../src/subcmd/commit').registerTo(program);
 require('../src/subcmd/camend').registerTo(program);
