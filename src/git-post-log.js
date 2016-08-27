@@ -9,7 +9,8 @@ const spawn_sync = require('child_process').spawnSync;
 // `format`: the format supported by `git log` command, see the man page for
 // details.
 function git_post_log(post_path, num, format) {
-  let git_args = ['log'];
+  // NOTE: add `follow` option to track moved files (e.g. from _drafts to _posts)
+  let git_args = ['log', '--follow'];
   // NOTE: only pass log entry count when the number arg is given
   // PS: passing empty string '' to spawn_sync yields error
   if (num && typeof num === 'number') {
