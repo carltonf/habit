@@ -23,7 +23,7 @@ describe('yaml/new', () => {
   });
 
   it('fail if title is missing', () => {
-    expect( () => { newHeader(); } ).
-      to.throw(SyntaxError, /title is not set/i);
+    expect( () => { newHeader(); } )
+      .to.throw(SyntaxError, /title is not set/i);
   })
 });
