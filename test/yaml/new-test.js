@@ -21,4 +21,9 @@ describe('yaml/new', () => {
   it('works', () => {
     expect( newHeader(title, date) ).to.equal(expected);
   });
+
+  it('fail if title is missing', () => {
+    expect( () => { newHeader(); } ).
+      to.throw(SyntaxError, /title is not set/i);
+  })
 });
