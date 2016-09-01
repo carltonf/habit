@@ -8,9 +8,12 @@ var program = require('commander');
 // Ref: http://stackoverflow.com/a/10855054/2526378
 program.version(require('../package.json').version)
 
+// Query
 require('../src/subcmd/status').registerTo(program);
 require('../src/subcmd/log').registerTo(program);
 
+// Editing
+require('../src/subcmd/new').registerTo(program);
 require('../src/subcmd/edit').registerTo(program);
 require('../src/subcmd/commit').registerTo(program);
 require('../src/subcmd/camend').registerTo(program);

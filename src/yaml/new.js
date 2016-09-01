@@ -16,7 +16,8 @@ tags:
 ---
 `;
 
-// NOTE `title` is mandatory, but `date` is optional
+// NOTE `title` is mandatory, but `date` is optional. (Rarely the client needs
+// to set `date`, it's here mainly for testing.)
 function newHeader(title, date) {
   if (typeof title !== 'string') {
     throw new SyntaxError('Mandatory title is not set');
