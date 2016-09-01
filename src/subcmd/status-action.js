@@ -30,7 +30,8 @@ StatusAction.prototype.getStatus = function getStatus (opts) {
     status = JSON.stringify(status);
   }
 
-  return status;
+  // NOTE trimed to sanitize the output
+  return status.trim();
 };
 
 ////////////////

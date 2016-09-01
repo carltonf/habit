@@ -19,7 +19,13 @@ function registerTo(program){
         let action = new StatusAction(post_path);
         let status = action.getStatus( this.opts() );
 
-        console.log(status);
+        if (status === '') {
+          // NOTE More informative on empty status
+          console.log('* INFO: no existing status found. New post?');
+        }
+        else {
+          console.log(status);
+        }
       } catch(e) {
         // NOTE only print the message field, try to be user-friendly
         console.error(e.message);
