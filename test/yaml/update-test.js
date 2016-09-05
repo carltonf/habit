@@ -22,7 +22,8 @@ describe('yaml/update', () => {
   });
 
   it ('fail on invalid input', () => {
-    expect( () => { updateHeader('This is invalid line') } )
-      .to.throw(SyntaxError, /not contain valid key/);
+    line = 'This is invalid line';
+
+    expect( updateHeader(line) ).to.equal(line);
   });
 });

@@ -1,6 +1,6 @@
 // Update a specific field of YAML header
 //
-// TODO it's only used to update fields like `date`, `last_modified_at`,
+// TODO it's only used to update one-line fields like `date`, `last_modified_at`,
 // `title`. Need YAML-parser capacity to handle more complicated fields like
 // `tags` (npm packge like `js-yaml` or `node-yamlhead` might be of some use.)
 
@@ -9,6 +9,9 @@
 // simplistic parsor. `key` is optional, if set only update line that matches
 // this key, if set but it doesn't match line's parsed key, return line unchanged.
 //
+// NOTE to be usable in callback, this function is very permissive, if the
+// `line` doesn't look like a 'key:val' pair, return the line.
+//
 // Return a string "key: val"
 function updateHeader(line, val, key) {
   let lineReg = /(\w+):.*/;
@@ -16,7 +19,7 @@ function updateHeader(line, val, key) {
   let res = lineReg.exec(line);
 
   if ( res === null ) {
-    throw SyntaxError(`"${line}" does not contain valid key.`);
+    return line;
   }
 
   if ( key && (key !== res[1]) ) {
