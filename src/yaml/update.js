@@ -6,10 +6,11 @@
 
 // Input: `line` is the old one-line string "key: old-val", the parsor use the
 // first colon as separator aand replace everything after it with `val`. A very
-// simplistic parsor.
+// simplistic parsor. `key` is optional, if set only update line that matches
+// this key, if set but it doesn't match line's parsed key, return line unchanged.
 //
 // Return a string "key: val"
-function updateHeader(line, val) {
+function updateHeader(line, val, key) {
   let lineReg = /(\w+):.*/;
 
   let res = lineReg.exec(line);
@@ -17,7 +18,13 @@ function updateHeader(line, val) {
   if ( res === null ) {
     throw SyntaxError(`"${line}" does not contain valid key.`);
   }
-  let key = res[1];
+
+  if ( key && (key !== res[1]) ) {
+    return line;
+  }
+
+  key = res[1];
+
   // NOTE there is no hard requirement for the existence of the `val` but should
   // be normalized to empty string to avoid awkward 'undefined' or 'null'.
   val = val || '';
