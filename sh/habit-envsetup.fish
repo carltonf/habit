@@ -30,8 +30,6 @@ function habit-cwp -d 'get/set cwp'
     return 1
   end
 
-  # NOTE update the last_modified_at field
-  habit-set-modified
   # NOTE make sure CWP is known to Git
   git add $habit_working_post
 end
@@ -39,45 +37,6 @@ end
 # TODO merge into habit nodejs
 function habit-diff -d 'Show all changes not commited yet'
   git diff HEAD -- $habit_working_post
-end
-
-# TODO better to be in 'habit commit' as for now this only works for CWP
-# TODO use the following to get the front matter line range to be more safer&accurate.
-# : grep -m 2 -n '^---$' _drafts/boxize-my-development-setup.md  | cut -d':' -f1
-function habit-set-modified -d 'set "last_modified_at" field for cwp'
-  set today (date +%Y-%m-%d)
-
-  # NOTE about adding date field:
-  #
-  # There is an issue with jekyll regenerating drafts without date field:
-  # new changes always get skipped with "future date" warning.
-  #
-  grep '^date:' $habit_working_post 2>&1 1>/dev/null
-  if [ $status -ne 0 ]
-    sed -i "/^title:/a date: $today" $habit_working_post
-  end
-
-  # NOTE subcommand substitution in fish will break current execution if
-  # subcommand doesn't write its stdin (happens mostly when subcommand failed,
-  # but it's not the only occasions) and thus the followings will not output
-  # 'ab' as in Bash. (they outputs 'msg' and an extra newline)
-  #
-  # : echo a(ls -hjk)
-  # : echo a(echo msg 1>&2)b  # an artificial case, note $status value will be 0
-  #
-  # (Hell, I guess every shell has its own idiosyncrasies) To get the same
-  # effect, write something like (only works for failed cmd)
-  #
-  # : echo a(ls -lhj; or echo '')b
-  #
-  # TODO I honestly believe the above behavior is a bug. It's particularly
-  # troublesome for command like `grep`.
-
-  if [ z(grep '^last_modified_at:' $habit_working_post; or echo '') = z ]
-    sed -i "/^title:/a last_modified_at: $today" $habit_working_post
-  else
-    sed -i "s/last_modified_at:.*/last_modified_at: $today/" $habit_working_post
-  end
 end
 
 function __fish_habit_find_post -d 'search post path with post name'

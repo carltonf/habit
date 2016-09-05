@@ -61,6 +61,7 @@ CommitAction.prototype.updateStatus = function updateStatus (opts) {
 };
 
 CommitAction.prototype.commit = function commit(json) {
+  this.__updateYAMLHeader();
   this.__commit(json);
 };
 
@@ -88,12 +89,45 @@ const post_logger = require('../git-post-log');
 const git_msg_parser = require('../git-msg-parser');
 const git_msg_generator = require('../git-msg-generator');
 const git_post_commit = require('../git-post-commit');
+const yamlUpdate = require('../yaml/update');
+const getLongDateStr = require('../date/getLongDateStr');
+
+const fs = require('fs');
+
 
 // TODO same as what in `status-action`
 CommitAction.prototype.__getStatusJSON = function __getStatusJSON () {
   let status = post_logger.raw_status(this.postPath);
   return git_msg_parser.parse(status);
 }
+
+function eachLineSync (filename, iteratee) {
+  return fs.readFileSync(filename, 'utf8')
+    .split('\n').map(iteratee).join('\n');
+}
+
+CommitAction.prototype.__updateYAMLHeader = function __updateYAML(json) {
+  // NOTE for now only update `last_modified_at`
+  let YAML_SEP = '---';
+  let yamlSepCount = 0;
+  let yamlBlock = [];
+
+  let parsedData = eachLineSync(this.postPath, function(line) {
+    if (yamlSepCount === 2) {
+      return line;
+    }
+
+    if (YAML_SEP === line) {
+      yamlSepCount++;
+      return line;
+    }
+
+    let todayStr = getLongDateStr( new Date() );
+    return yamlUpdate(line, todayStr, 'last_modified_at');
+  });
+
+  fs.writeFileSync(this.postPath, parsedData, 'utf8');
+};
 
 CommitAction.prototype.__commit = function __commit(json) {
   let commitMsg = git_msg_generator.generate(json);
