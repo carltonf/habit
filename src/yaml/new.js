@@ -3,6 +3,8 @@
 // TODO we can have more control on the default template using configuration
 // files.
 
+const getLongDateStr = require('../date/getLongDateStr');
+
 // NOTE `dateStr` is in a format like '2016-8-30'
 // `title` value must be quoted to avoid potential 'colon' parsing error
 var headerGen = (title, dateStr) =>
@@ -23,12 +25,7 @@ function newHeader(title, date) {
     throw new SyntaxError('Mandatory title is not set');
   }
   let today = date || new Date();
-  // NOTE trick to get dates with leading zeros
-  // Ref: http://stackoverflow.com/a/6040556/2526378
-  let dayStr = ( '0' + today.getDate() ).slice(-2) ;
-  let monthStr = ( '0' + (today.getMonth() + 1) ).slice(-2);
-
-  let todayStr = `${today.getFullYear()}-${monthStr}-${dayStr}`;
+  let todayStr = getLongDateStr( today );
 
   return headerGen(title, todayStr);
 }
