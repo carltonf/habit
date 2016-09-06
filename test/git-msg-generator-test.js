@@ -1,8 +1,8 @@
-var generate = require('../src/git-msg-generator').generate;
+var generate = require('../src/git/msg-generator').generate;
 var expect = require('chai').expect
 var K = require('../src/keywords-enum');
 
-describe('git-msg-generator', () => {
+describe('git/msg-generator', () => {
 
   describe('generate', () => {
     var jsdata;

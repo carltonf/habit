@@ -36,7 +36,7 @@ function git_post_status(post_path) {
   return git_post_log(post_path, 1);
 }
 
-// NOTE for parsing by git-msg-parser
+// NOTE for parsing by git/msg-parser
 function git_post_raw_status (post_path) {
   return git_post_log(post_path, 1, '%s%n%b');
 }

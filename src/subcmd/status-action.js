@@ -38,8 +38,8 @@ StatusAction.prototype.getStatus = function getStatus (opts) {
 // NOTE Wrap external dependencies in small simple methods that can be easily
 // stubbed out in tests.
 //
-const post_logger = require('../git-post-log');
-const git_msg_parser = require('../git-msg-parser');
+const post_logger = require('../git/post-log');
+const git_msg_parser = require('../git/msg-parser');
 
 StatusAction.prototype.__getStatusStr = function __getStatusStr () {
   return post_logger.status(this.postPath);

@@ -1,6 +1,6 @@
 const spawn = require('child_process').spawn;
 const vorpal = require('vorpal')();
-const post_logger = require('./src/git-post-log');
+const post_logger = require('./src/git/post-log');
 
 // FIX: dbg
 process.chdir('/home/vagrant/work/carltonf-blog-source');

@@ -3,8 +3,8 @@
 // Input: Json data
 // Output: string
 //
-var validate = require('./git-msg-validator').validate;
-var K = require('../src/keywords-enum');
+var validate = require('./msg-validator').validate;
+var K = require('../keywords-enum');
 
 function git_msg_generate (jsdata) {
   validate(jsdata);

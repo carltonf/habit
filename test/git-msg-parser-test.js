@@ -1,8 +1,8 @@
 var expect = require('chai').expect
-var parser = require('../src/git-msg-parser');
+var parser = require('../src/git/msg-parser');
 var K = require('../src/keywords-enum');
 
-describe('git-msg-parser', () => {
+describe('git/msg-parser', () => {
 
   describe('parse', () => {
     var msg;

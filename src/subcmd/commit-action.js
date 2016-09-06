@@ -85,10 +85,10 @@ CommitAction.prototype.getCurrentStatusJSON = function getCurrentStatusJSON () {
 };
 
 ///// External dependencies
-const post_logger = require('../git-post-log');
-const git_msg_parser = require('../git-msg-parser');
-const git_msg_generator = require('../git-msg-generator');
-const git_post_commit = require('../git-post-commit');
+const post_logger = require('../git/post-log');
+const git_msg_parser = require('../git/msg-parser');
+const git_msg_generator = require('../git/msg-generator');
+const git_post_commit = require('../git/post-commit');
 const yamlUpdate = require('../yaml/update');
 const getLongDateStr = require('../date/getLongDateStr');
 

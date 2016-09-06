@@ -1,7 +1,7 @@
-var validate = require('../src/git-msg-validator').validate;
+var validate = require('../src/git/msg-validator').validate;
 var expect = require('chai').expect
 
-describe('git-msg-validator', () => {
+describe('git/msg-validator', () => {
 
   describe('validate', () => {
     var jsdata;

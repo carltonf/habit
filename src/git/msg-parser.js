@@ -5,7 +5,7 @@
 // msg is invalid
 //
 // NOTE check 'validator' file for format definition
-var validator = require('./git-msg-validator');
+var validator = require('./msg-validator');
 
 // NOTE regexp literal notation is used here for both convenience and
 // efficiency. Normally all references to keywords like `habit` should be using

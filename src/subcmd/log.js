@@ -37,7 +37,7 @@ LogAction.prototype.getLog = function getLog () {
 }
 
 // External Deps
-const post_logger = require('../git-post-log');
+const post_logger = require('../git/post-log');
 
 LogAction.prototype.__getLog = function __getLog () {
   return post_logger.log(this.postPath);

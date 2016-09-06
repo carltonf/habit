@@ -11,7 +11,7 @@ CAmendAction.prototype.commitAmend = function commitAmend () {
 }
 
 //// External
-const git_post_camend = require('../git-post-commit').amend;
+const git_post_camend = require('../git/post-commit').amend;
 CAmendAction.prototype.__commitAmend = function __commitAmend(postPath) {
   git_post_camend(postPath);
 }
